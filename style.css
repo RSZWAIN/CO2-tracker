@@ -1,0 +1,557 @@
+/* Import Google Fonts - Inter */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap');
+
+:root {
+    --primary-color: #007bff; /* Vibrant Blue */
+    --secondary-color: #6c757d; /* Grey */
+    --accent-color: #28a745; /* Green for positive status/data */
+    --danger-color: #dc3545; /* Red for alerts/offline */
+    --background-light: #f8f9fa; /* Lighter background for body */
+    --background-dark: #343a40; /* Darker background for header/footer */
+    --text-color-dark: #343a40;
+    --text-color-light: #f8f9fa;
+    --card-background: #ffffff;
+    --border-color: #e9ecef;
+    --shadow-light: rgba(0, 0, 0, 0.08);
+    --shadow-medium: rgba(0, 0, 0, 0.15);
+    --spacing-sm: 10px;
+    --spacing-md: 20px;
+    --spacing-lg: 30px;
+}
+
+body {
+    font-family: 'Inter', Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: var(--background-light);
+    color: var(--text-color-dark);
+    line-height: 1.6;
+    display: flex; /* Use flexbox for overall layout */
+    flex-direction: column;
+    min-height: 100vh; /* Ensure footer stays at bottom */
+}
+
+/* Header Styling */
+header {
+    background-color: var(--background-dark);
+    color: var(--text-color-light);
+    padding: var(--spacing-md) 0;
+    box-shadow: 0 4px 10px var(--shadow-medium);
+    z-index: 100; /* Ensure header is above other content */
+}
+
+.header-content {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 var(--spacing-md);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+}
+
+header h1 {
+    margin: 0;
+    font-size: 1.8em;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+header h1 .fas {
+    font-size: 1.2em; /* Adjust icon size */
+    color: var(--accent-color);
+}
+
+header nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    gap: var(--spacing-md);
+}
+
+header nav a {
+    color: var(--text-color-light);
+    text-decoration: none;
+    font-weight: 600;
+    padding: 5px 10px;
+    transition: color 0.3s ease, background-color 0.3s ease, transform 0.2s ease;
+    border-radius: 4px;
+}
+
+header nav a:hover,
+header nav a:focus {
+    color: var(--primary-color);
+    background-color: rgba(255, 255, 255, 0.1);
+    transform: translateY(-2px);
+}
+
+/* Main Content Layout */
+main {
+    flex-grow: 1; /* Allows main content to expand and push footer down */
+    padding: var(--spacing-lg) var(--spacing-md);
+    max-width: 1200px;
+    margin: var(--spacing-md) auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); /* Adjusted minmax for better flow */
+    gap: var(--spacing-lg); /* Increased gap for better separation */
+}
+
+/* Dashboard Section (Card) Styling */
+.dashboard-section.card,
+.card { /* Added .card for general use */
+    background-color: var(--card-background);
+    padding: var(--spacing-md);
+    border-radius: 12px; /* More pronounced rounded corners */
+    box-shadow: 0 6px 20px var(--shadow-light); /* Softer, larger shadow */
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.dashboard-section.card:hover,
+.card:hover { /* Added .card for general use */
+    transform: translateY(-5px); /* Subtle lift effect on hover */
+    box-shadow: 0 10px 30px var(--shadow-medium);
+}
+
+h2 {
+    color: var(--primary-color);
+    margin-top: 0;
+    margin-bottom: var(--spacing-md);
+    padding-bottom: var(--spacing-sm);
+    border-bottom: 2px solid var(--border-color);
+    font-size: 1.5em;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-sm);
+}
+
+h2 .fas { /* Styles for Font Awesome icons in titles */
+    font-size: 1.1em;
+    color: var(--accent-color);
+}
+
+
+/* Specific Layout for Device Overview and Real-time Data */
+#device-overview,
+#realtime-data {
+    grid-column: 1 / -1; /* Make these sections full width */
+}
+
+/* Device List Styling - Horizontal Scroll with improved cards */
+#device-list {
+    display: flex;
+    overflow-x: auto; /* Enable horizontal scrolling */
+    gap: var(--spacing-md); /* Spacing between cards */
+    padding-bottom: var(--spacing-sm); /* Padding for scrollbar */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+    scrollbar-width: thin; /* Firefox */
+    scrollbar-color: var(--primary-color) var(--border-color); /* Firefox */
+}
+
+/* Scrollbar styles for Webkit browsers */
+#device-list::-webkit-scrollbar {
+    height: 8px;
+}
+#device-list::-webkit-scrollbar-track {
+    background: var(--border-color);
+    border-radius: 4px;
+}
+#device-list::-webkit-scrollbar-thumb {
+    background: var(--primary-color);
+    border-radius: 4px;
+}
+#device-list::-webkit-scrollbar-thumb:hover {
+    background: #0056b3; /* Darker primary on hover */
+}
+
+.device-card {
+    flex: 0 0 280px; /* Fixed width for consistent card size */
+    background-color: var(--card-background);
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    display: flex;
+    flex-direction: column; /* Stack image and content vertically */
+    overflow: hidden; /* Hide anything that overflows the rounded corners */
+}
+
+.device-card:hover {
+    box-shadow: 0 8px 20px var(--shadow-light);
+    transform: translateY(-4px);
+    border-color: var(--primary-color);
+}
+
+.device-card.active {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    border-color: var(--primary-color);
+    box-shadow: 0 8px 25px rgba(0, 123, 255, 0.13); /* Subtle shadow with primary color tint */
+    transform: scale(1.02); /* Slightly larger when active */
+}
+
+.device-card.active h3,
+.device-card.active p,
+.device-card.active .device-status {
+    color: var(--text-color-light); /* Ensure text is readable on active card */
+}
+
+/* NEW: Styles for the device image */
+.device-card-image {
+    width: 100%;
+    height: 120px; /* Fixed height for the image */
+    background-size: cover; /* Cover the entire area */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat;
+    border-top-left-radius: 9px; /* Match parent's border-radius for top corners */
+    border-top-right-radius: 9px;
+}
+
+/* NEW: Styles for the device content wrapper */
+.device-card-content {
+    padding: var(--spacing-md); /* Add padding here instead of on the card directly */
+    flex-grow: 1; /* Allow content to take available space */
+    display: flex;
+    flex-direction: column;
+}
+
+.device-card h3 {
+    margin-top: 0;
+    margin-bottom: var(--spacing-sm);
+    color: var(--primary-color);
+    font-size: 1.3em;
+}
+
+.device-card.active h3 {
+    color: var(--text-color-light);
+}
+
+.device-card p {
+    margin: 5px 0;
+    font-size: 0.95em;
+    color: var(--text-color-dark);
+}
+
+.device-card.active p {
+    color: rgba(255, 255, 255, 0.9);
+}
+
+.device-status {
+    font-weight: 700;
+    color: var(--accent-color);
+}
+
+.device-status.offline {
+    color: var(--danger-color);
+}
+
+.device-card.active .device-status {
+    color: var(--text-color-light); /* Ensure status is visible on active card */
+}
+
+
+/* Real-time Display */
+#realtime-display {
+    min-height: 120px; /* Slightly increased min-height */
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.1em;
+    color: var(--text-color-dark);
+    background-color: var(--background-light);
+    padding: var(--spacing-md);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+    text-align: center;
+}
+
+#realtime-display p {
+    margin: 8px 0; /* Adjust margin */
+}
+
+#realtime-display strong {
+    font-size: 2.2em; /* Larger CO2 reading */
+    color: var(--primary-color); /* Main display color */
+    font-weight: 700;
+}
+
+#realtime-display p[style*="color: var(--danger-color)"] { /* Specific style for high alert */
+    color: var(--danger-color) !important;
+    font-weight: 700;
+    font-size: 1em;
+}
+
+#realtime-display p[style*="color: #ffc107"] { /* Specific style for elevated alert */
+    color: #ffc107 !important; /* Warning yellow */
+    font-weight: 700;
+    font-size: 1em;
+}
+
+/* Map Styling */
+#map {
+    width: 100%;
+    height: 450px; /* Slightly increased map height */
+    border-radius: 8px;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.05); /* Subtle inner shadow */
+}
+
+/* Chart Container */
+.chart-container {
+    position: relative;
+    height: 350px; /* Adjusted height for charts */
+    width: 100%;
+    padding: var(--spacing-sm); /* Padding inside chart container */
+    box-sizing: border-box; /* Include padding in element's total width and height */
+}
+
+/* Buttons */
+.btn {
+    background-color: var(--primary-color);
+    color: var(--text-color-light);
+    padding: 12px 25px; /* Larger padding for better touch targets */
+    border: none;
+    border-radius: 8px; /* More rounded buttons */
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: 600;
+    transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
+    display: inline-flex; /* For better icon integration if you add one */
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn:hover {
+    background-color: #0056b3; /* Darker blue on hover */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 123, 255, 0.2); /* Subtle shadow */
+}
+
+.btn:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* Footer Styling */
+footer {
+    text-align: center;
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-lg);
+    background-color: var(--background-dark);
+    color: var(--text-color-light);
+    font-size: 0.9em;
+    box-shadow: 0 -2px 10px var(--shadow-medium);
+}
+
+/* Responsive adjustments */
+@media (max-width: 992px) {
+    .header-content {
+        flex-direction: column;
+        text-align: center;
+        gap: var(--spacing-md);
+    }
+    header nav ul {
+        flex-wrap: wrap;
+        justify-content: center;
+    }
+    main {
+        padding: var(--spacing-md);
+        gap: var(--spacing-md);
+    }
+    .device-card {
+        flex: 0 0 250px; /* Adjust card width slightly */
+    }
+}
+
+@media (max-width: 768px) {
+    main {
+        grid-template-columns: 1fr; /* Single column layout for smaller tablets and phones */
+        padding: var(--spacing-sm);
+    }
+    .dashboard-section.card {
+        padding: var(--spacing-md);
+    }
+    #device-overview,
+    #realtime-data {
+        grid-column: auto; /* Reset grid-column for auto flow on small screens */
+    }
+    .device-card {
+        flex: 0 0 calc(90% - var(--spacing-md)); /* Make cards take more width on small screens to reduce horizontal scrolling */
+        max-width: 300px; /* Limit max width */
+    }
+    #device-list {
+        justify-content: flex-start; /* Align items to the start */
+    }
+    .chart-container {
+        height: 300px; /* Adjust height for smaller screens */
+    }
+    header h1 {
+        font-size: 1.5em;
+    }
+    header nav a {
+        font-size: 0.9em;
+        padding: 8px;
+    }
+    h2 {
+        font-size: 1.3em;
+    }
+}
+
+@media (max-width: 480px) {
+    .device-card {
+        flex: 0 0 calc(100% - var(--spacing-md)); /* Make cards almost full width on very small screens */
+        max-width: unset; /* Remove max-width constraint */
+    }
+    .header-content {
+        padding: 0 var(--spacing-sm);
+    }
+    header nav ul {
+        gap: var(--spacing-sm);
+    }
+    header nav a {
+        padding: 6px;
+    }
+    h2 {
+        font-size: 1.2em;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+    h2 .fas {
+        font-size: 1em;
+    }
+    .btn {
+        width: 100%; /* Full width buttons on very small screens */
+        padding: 10px;
+        font-size: 1em;
+    }
+    #realtime-display strong {
+        font-size: 1.8em;
+    }
+}
+
+.view-details-button {
+    display: inline-block; /* Allows padding and margin, prevents full width */
+    padding: 12px 25px; /* Adjust padding for size */
+    margin-top: 15px; /* Space above the button */
+    /* Vibrant Gradient: Uses your existing primary and accent colors */
+    background: linear-gradient(45deg, var(--primary-color, #007bff), var(--accent-color, #28a745));
+    color: white; /* White text for contrast */
+    font-size: 1.1em; /* Slightly larger text */
+    font-weight: 600; /* Bold text */
+    text-decoration: none; /* In case it's an <a> tag */
+    border: none; /* Remove default button border */
+    border-radius: 8px; /* Nicely rounded corners */
+    cursor: pointer; /* Indicate it's clickable */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2); /* Soft shadow for depth */
+    transition: all 0.3s ease; /* Smooth transitions for hover effects */
+    text-shadow: 1px 1px 2px rgba(0,0,0,0.2); /* Subtle text shadow */
+    letter-spacing: 0.5px; /* A little space between letters */
+    animation: pulseButton 2s infinite ease-in-out; /* Subtle pulsing animation */
+    /* Add any other specific styling you want, e.g., font-family if it's different from body */
+    font-family: 'Inter', sans-serif; /* Assuming you are using Inter font */
+}
+
+.view-details-button:hover {
+    transform: translateY(-2px); /* Lift button slightly on hover */
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Enhance shadow on hover */
+    /* Optional: Reverse gradient or change color slightly on hover for a dynamic effect */
+    background: linear-gradient(45deg, var(--accent-color, #28a745), var(--primary-color, #007bff));
+}
+
+.view-details-button:active {
+    transform: translateY(0); /* Push button down on click */
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Smaller shadow on active */
+}
+
+/* Keyframes for the pulsing animation */
+@keyframes pulseButton {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+    50% {
+        transform: scale(1.02); /* Slight scale up */
+        box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3); /* Slightly larger shadow */
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+    }
+}
+
+/* New CSS for the High Emission Vehicles section */
+.high-emission-vehicles {
+    grid-column: 1 / -1; /* Make this section full width */
+}
+
+.add-vehicle-section {
+    display: flex;
+    gap: var(--spacing-sm);
+    margin-bottom: var(--spacing-md);
+}
+
+.add-vehicle-section input {
+    flex-grow: 1;
+    padding: 10px;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-family: 'Inter', sans-serif;
+    font-size: 1em;
+}
+
+#vehicle-list {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+    background-color: var(--background-light);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.vehicle-item {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border-color);
+    font-weight: 500;
+    color: var(--text-color-dark);
+    transition: background-color 0.2s ease;
+}
+
+.vehicle-item:last-child {
+    border-bottom: none;
+}
+
+.vehicle-item:hover {
+    background-color: rgba(0, 123, 255, 0.05);
+}
+
+.no-data-msg, .error-msg {
+    padding: 12px 15px;
+    text-align: center;
+    color: var(--secondary-color);
+    font-style: italic;
+}
+
+.error-msg {
+    color: var(--danger-color);
+}
+
+.footer-button{
+
+    color:white;
+    padding-left:30px;
+    padding-right:40px;
+    text-decoration: none;
+}
+
+.logo-img {
+    height: 40px;
+    vertical-align: middle;
+    border-radius: 15px; /* Adjust this value to make it rounder (e.g., 20px or 50% for a circle) */
+}

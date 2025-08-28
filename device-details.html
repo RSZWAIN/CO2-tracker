@@ -1,0 +1,249 @@
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>Device Details - ECC</title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+        <link rel="stylesheet" href="style.css">
+        <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+        <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
+        <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+        <style>
+            /* Match device-card styling from index.html */
+            .device-header {
+                background-color: var(--card-background);
+                padding: var(--spacing-md);
+                border-radius: 10px;
+                border: 1px solid var(--border-color);
+                box-shadow: 0 6px 20px var(--shadow-light);
+                margin-bottom: var(--spacing-lg);
+                display: flex;
+                align-items: center;
+                gap: var(--spacing-md);
+                transition: all 0.3s ease-in-out;
+            }
+            .device-header:hover {
+                transform: translateY(-4px);
+                box-shadow: 0 8px 20px var(--shadow-light);
+                border-color: var(--primary-color);
+            }
+            .device-header img {
+                width: 120px;
+                height: 120px;
+                object-fit: cover;
+                border-radius: 9px;
+                flex-shrink: 0;
+            }
+            .device-info {
+                flex-grow: 1;
+            }
+            .device-info h1 {
+                color: var(--primary-color);
+                font-size: 1.3em;
+                margin: 0 0 var(--spacing-sm);
+                font-weight: 600;
+            }
+            .device-info p {
+                margin: 5px 0;
+                font-size: 0.95em;
+                color: var(--text-color-dark);
+                display: block;
+                opacity: 1;
+            }
+            .device-status {
+                font-weight: 700;
+                color: var(--accent-color);
+            }
+            .device-status.offline {
+                color: var(--danger-color);
+            }
+            .error-msg {
+                color: var(--danger-color);
+                font-weight: 600;
+                text-align: center;
+            }
+            /* Match main grid from index.html */
+            main {
+                max-width: 1200px;
+                margin: var(--spacing-md) auto;
+                padding: var(--spacing-lg) var(--spacing-md);
+                display: grid;
+                grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                gap: var(--spacing-lg);
+            }
+            /* Ensure real-time section is full-width */
+            .realtime-section {
+                grid-column: 1 / -1;
+                min-height: 120px;
+                display: flex;
+                flex-direction: column;
+                align-items: center;
+                justify-content: center;
+                font-size: 1.1em;
+                color: var(--text-color-dark);
+                background-color: var(--background-light);
+                padding: var(--spacing-md);
+                border-radius: 8px;
+                border: 1px solid var(--border-color);
+                text-align: center;
+            }
+            .realtime-section p {
+                margin: 8px 0;
+            }
+            .realtime-section strong {
+                font-size: 2.2em;
+                color: var(--primary-color);
+                font-weight: 700;
+            }
+            .realtime-section p[style*="color: var(--danger-color)"] {
+                color: var(--danger-color) !important;
+                font-weight: 700;
+                font-size: 1em;
+            }
+            .realtime-section p[style*="color: #ffc107"] {
+                color: #ffc107 !important;
+                font-weight: 700;
+                font-size: 1em;
+            }
+            /* Chart and vehicle/map sections */
+            .chart-container {
+                position: relative;
+                height: 350px;
+                width: 100%;
+                padding: var(--spacing-sm);
+                box-sizing: border-box;
+            }
+            .vehicle-section, .map-section {
+                padding: var(--spacing-md);
+            }
+            #detail-map {
+                width: 100%;
+                height: 450px;
+                border-radius: 8px;
+                box-shadow: inset 0 0 10px rgba(0,0,0,0.05);
+            }
+            .vehicle-list {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+                max-height: 200px;
+                overflow-y: auto;
+                border: 1px solid var(--border-color);
+                border-radius: 8px;
+            }
+            .vehicle-item {
+                padding: 12px 15px;
+                border-bottom: 1px solid var(--border-color);
+                font-weight: 500;
+                color: var(--text-color-dark);
+                transition: background-color 0.2s ease;
+            }
+            .vehicle-item:last-child {
+                border-bottom: none;
+            }
+            .vehicle-item:hover {
+                background-color: rgba(0, 123, 255, 0.05);
+            }
+            .no-vehicles {
+                padding: 12px 15px;
+                text-align: center;
+                color: var(--secondary-color);
+                font-style: italic;
+            }
+            @media (max-width: 768px) {
+                main {
+                    grid-template-columns: 1fr;
+                    padding: var(--spacing-sm);
+                }
+                .realtime-section {
+                    grid-column: auto;
+                }
+                .device-header {
+                    flex-direction: column;
+                    text-align: center;
+                    gap: var(--spacing-sm);
+                }
+                .device-header img {
+                    width: 100px;
+                    height: 100px;
+                }
+                .device-info h1 {
+                    font-size: 1.2em;
+                }
+                .chart-container {
+                    height: 300px;
+                }
+                #detail-map {
+                    height: 300px;
+                }
+                .realtime-section strong {
+                    font-size: 1.8em;
+                }
+            }
+            /* Style for the logo image */
+            .logo-img {
+                border-radius: 15px; /* Adjust this value to make it rounder (e.g., 50% for a full circle) */
+                height: 40px;
+                vertical-align: middle;
+            }
+        </style>
+    </head>
+    <body>
+        <header>
+            <div class="header-content">
+                <h1><img src="ecc-logo.png" alt="ECC Logo" class="logo-img"> ECC</h1>
+                <nav>
+                    <ul>
+                        <li><a href="index.html">Dashboard</a></li>
+                    </ul>
+                </nav>
+            </div>
+        </header>
+        <main>
+            <section class="device-header card">
+                <img id="device-image" src="./images/placeholder.jpg" alt="Device Image">
+                <div class="device-info">
+                    <h1 id="device-name">Loading...</h1>
+                    <p>ID: <span id="device-id">N/A</span></p>
+                    <p>Status: <span id="device-status">N/A</span></p>
+                    <p>Battery: <span id="device-battery">N/A</span>%</p>
+                    <p>Location: <span id="device-location">N/A</span></p>
+                    <p id="error-message" class="error-msg" style="display: none;">Error: Unable to load device data</p>
+                </div>
+            </section>
+            <section id="realtime-data" class="dashboard-section card realtime-section">
+                <h2><i class="fas fa-gauge-high"></i> Real-time CO2 Data</h2>
+                <div id="realtime-display">
+                    <p id="realtime-co2-title">Loading...</p>
+                    <p id="realtime-co2-value"><strong>Loading...</strong></p>
+                    <p id="realtime-co2-alert"></p>
+                    <button class="view-details-button" onclick="window.location.href='index.html'">Back to Dashboard</button>
+                </div>
+            </section>
+            <section id="historical-data" class="dashboard-section card chart-section">
+                <h2><i class="fas fa-chart-line"></i> Historical CO2 Data (7 Days)</h2>
+                <div class="chart-container">
+                    <canvas id="historicalCo2Chart"></canvas>
+                </div>
+            </section>
+            <section id="vehicles" class="dashboard-section card vehicle-section">
+                <h2><i class="fas fa-car"></i> High Emission Vehicles</h2>
+                <ul id="vehicle-list" class="vehicle-list"></ul>
+            </section>
+            <section id="tracker-map" class="dashboard-section card map-section">
+                <h2><i class="fas fa-map-marked-alt"></i> Device Location Map</h2>
+                <div id="detail-map"></div>
+            </section>
+        </main>
+        <footer class="footer">
+            <p>&copy; 2025 ECC Project. All rights reserved.</p>
+            <div class="footer-buttons">
+                <a href="faqs.html" class="footer-button">FAQs</a>
+                <a href="contact.html" class="footer-button">Contact Us</a>
+            </div>
+        </footer>
+        <script src="device-details.js"></script>
+    </body>
+    </html>
